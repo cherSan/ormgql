@@ -14,16 +14,6 @@ export class RoleResolver {
   ) {
   }
   
-  @FieldResolver()
-  async users(@Root() role: Role) {
-    try {
-      return await this.userRepository.find({where: {roleId: role.id}});
-    } catch (e) {
-      throw new GraphQLError(e)
-    }
-    
-  }
-  
   @Query(returns => [Role], {nullable: true})
   async getRoles() {
     try {

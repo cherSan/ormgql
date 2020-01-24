@@ -5,7 +5,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinTable,
-  ManyToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from "typeorm";
@@ -13,26 +13,22 @@ import {User} from "./User";
 
 @ObjectType()
 @Entity()
-export class Role extends BaseEntity {
- 
+export class Post extends BaseEntity {
+  
   @Field(type => ID, {nullable: false})
   @PrimaryGeneratedColumn('uuid')
   public readonly id!: string;
   
   @Field(type => String, {nullable: false})
-  @Column({ default: 'USER' })
-  public name!: string;
+  @Column()
+  public text!: string;
+
+  @Column()
+  public authorId!: string;
   
-  @Field(type => String, {nullable: true, defaultValue: null})
-  @Column({nullable: true})
-  public description!: string;
-  
-  @ManyToMany(type => User, user => { console.log(user); return user.id }, { lazy: true })
-  @JoinTable({
-    name: 'user_role_like'
-  })
-  @Field(type => [User], {nullable: true})
-  public users!: Promise<User[]>;
+  @Field(type => User, {nullable: true})
+  @ManyToOne(type => User,{ nullable: false, eager: true })
+  public author!: User;
   
   @CreateDateColumn({ type: "timestamp" })
   public createdAt!: Date;
@@ -42,10 +38,10 @@ export class Role extends BaseEntity {
 }
 
 @InputType()
-export class RoleInput {
+export class PostInput {
   @Field(type => String, {nullable: false})
-  public name!: string;
+  public text!: string;
   
-  @Field(type => String, {nullable: true})
-  public description!: string;
+  @Field(type => ID, {nullable: true})
+  public author!: string;
 }

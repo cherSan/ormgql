@@ -16,18 +16,18 @@ export class TestResolver {
   @FieldResolver()
   async user(@Root() test: Test) {
     try {
-      return { id: test.user.id + 10 };
+      return this.userRepository.findOne();
     } catch (e) {
       throw new GraphQLError(e)
     }
   }
   
-  @Query(returns => Test, {nullable: true})
+  @Query(returns => [Test], {nullable: true})
   async getTest(
     @Arg('id') id: number
   ) {
     try {
-      return { id, user: { id } };
+      return { id };
     } catch (e) {
       throw new GraphQLError(e)
     }
